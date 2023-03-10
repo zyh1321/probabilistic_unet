@@ -46,9 +46,9 @@ net.to(device)
 
 
 optimizer = torch.optim.Adam(net.parameters(), lr=1e-4, weight_decay=0)
-epochs = 50
-plt_iou = []
-
+epochs = 5
+plt_train_iou = []
+plt_test_iou = []
 
 for epoch in range(epochs):
     epoch_train_iou = []
@@ -89,7 +89,8 @@ for epoch in range(epochs):
           'train_Iou:', round(np.mean(epoch_train_iou), 4),
           'test_Iou:', round(np.mean(epoch_test_iou), 4)
           )
-    plt_iou.append(round(np.mean(epoch_test_iou), 4))
+    plt_train_iou.append(round(np.mean(epoch_train_iou), 4))
+    plt_test_iou.append(round(np.mean(epoch_test_iou), 4))
     static_dict = net.state_dict()
     torch.save(static_dict, './weights/epoch_{},Iou_{},test_Iou_{}.pth'
                .format(epoch,
@@ -97,7 +98,8 @@ for epoch in range(epochs):
                        round(np.mean(epoch_test_iou), 4)
                        ))
 
-plt.plot(range(1, epochs + 1), plt_iou, label='Iou')
-plt.legend()
+plt.plot(range(1, epochs + 1), plt_test_iou, label='test_iou')
+plt.plot(range(1, epochs + 1), plt_train_iou, label='train_iou')
+plt.legend(loc='lower right')
 plt.savefig('./Iou_figure.png')
 pylab.show()
